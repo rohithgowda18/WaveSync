@@ -4,9 +4,9 @@ from datetime import datetime
 from typing import Dict, Any
 
 # Import the helper modules using package‑relative imports
-from .prompt import build_prompt
-from .ai_agent import call_gemini
-from .parser import parse_response
+from wavesync.agents.prompt import build_prompt
+from wavesync.agents.agents import call_gemini
+from wavesync.agents.parser import parse_response
 
 # Configure a module‑level logger (applications can override this configuration)
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(levelname)s: %(message)s")

@@ -20,7 +20,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Import configuration (model name, retry settings, etc.)
-from .config import (
+from wavesync.agents.config import (
     GROQ_MODEL,
     TEMPERATURE,
     MAX_RETRIES,

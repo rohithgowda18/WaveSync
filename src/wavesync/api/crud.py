@@ -1,11 +1,13 @@
 from sqlalchemy.orm import Session
-from models import Service
+from wavesync.api.models import Service
 
 def create_service(db: Session, service):
     db_service = Service(
         name=service.name,
         priority=service.priority,
-        dependencies=",".join(service.dependencies)
+        dependencies=",".join(service.dependencies),
+        tech_stack=service.tech_stack,
+        database_type=service.database_type
     )
     db.add(db_service)
     db.commit()

@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime
-from database import Base
+from wavesync.api.database import Base
 from datetime import datetime
 
 class Service(Base):
@@ -10,6 +10,8 @@ class Service(Base):
     status = Column(String(50), default="Pending")
     priority = Column(Integer)
     dependencies = Column(String(255))
+    tech_stack = Column(String(255))
+    database_type = Column(String(255))
 
     # NEW (IMPORTANT)
     created_at = Column(DateTime, default=datetime.utcnow)

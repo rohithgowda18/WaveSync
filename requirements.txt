@@ -1,0 +1,16 @@
+# Core API (Member 1)
+fastapi>=0.100.0
+uvicorn>=0.22.0
+sqlalchemy>=2.0.0
+pydantic>=2.0.0
+
+# Graph & Logic (Member 2)
+networkx>=3.1
+
+# AI Intelligence (Member 3)
+groq>=0.3.0
+python-dotenv>=1.0.0
+
+# Testing
+pytest>=7.0.0
+httpx>=0.24.0

@@ -1,0 +1,30 @@
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Byte-code cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables
+.env
+
+# Database (Member 1)
+wavesync.db
+
+# IDE / Editor Files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Logs and Temporary Files
+*.log
+*.tmp
+.pytest_cache/

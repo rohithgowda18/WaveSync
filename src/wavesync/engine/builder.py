@@ -1,6 +1,6 @@
 import networkx as nx
 from typing import List
-from service_node import ServiceNode
+from wavesync.engine.models import ServiceNode
 
 def build_service_dag(services: List[ServiceNode]) -> nx.DiGraph:
     """

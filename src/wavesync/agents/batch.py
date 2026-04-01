@@ -3,7 +3,7 @@ import logging
 from typing import List, Dict, Any
 
 # Local import – assumes rectify.py is in the same package/directory
-from rectify import rectify
+from wavesync.agents.rectify import rectify
 
 # Configure a module‑level logger (applications can reconfigure as needed)
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(levelname)s: %(message)s")

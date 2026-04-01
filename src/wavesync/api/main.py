@@ -1,9 +1,9 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from database import SessionLocal, engine, Base
-from schemas import ServiceCreate, ServiceResponse
-import crud
-from models import Service
+from wavesync.api.database import SessionLocal, engine, Base
+from wavesync.api.schemas import ServiceCreate, ServiceResponse
+from wavesync.api import crud
+from wavesync.api.models import Service
 import logging
 
 # -----------------------------
@@ -40,6 +40,8 @@ def format_service(service):
         "status": service.status,
         "priority": service.priority,
         "dependencies": service.dependencies.split(",") if service.dependencies else [],
+        "tech_stack": service.tech_stack,
+        "database_type": service.database_type,
         "created_at": service.created_at,
         "updated_at": service.updated_at
     }
@@ -60,7 +62,9 @@ def upload_services(services: list[ServiceCreate], db: Session = Depends(get_db)
             Service(
                 name=s.name,
                 priority=s.priority,
-                dependencies=",".join(s.dependencies)
+                dependencies=",".join(s.dependencies),
+                tech_stack=s.tech_stack,
+                database_type=s.database_type
             )
         )
 

@@ -7,14 +7,12 @@ import os
 # Load .env file
 load_dotenv()
 
-DB_USER = os.getenv("DB_USER")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-DB_HOST = os.getenv("DB_HOST")
-DB_NAME = os.getenv("DB_NAME")
+# Member 1 Requirement: SQLite schema
+DATABASE_URL = "sqlite:///./wavesync.db"
 
-DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
-
-engine = create_engine(DATABASE_URL)
+engine = create_engine(
+    DATABASE_URL, connect_args={"check_same_thread": False}
+)
 
 SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()

@@ -5,6 +5,7 @@ from schemas import ServiceCreate, ServiceResponse
 import crud
 from models import Service
 import logging
+import json
 
 # -----------------------------
 # Setup
@@ -150,6 +151,16 @@ def progress(db: Session = Depends(get_db)):
         "failed": failed,
         "percentage": percentage
     }
+
+@app.post("/seed")
+def seed_data(db: Session = Depends(get_db)):
+    with open("services.json", "r") as f:
+        data = json.load(f)
+
+    for service in data:
+        crud.create_service(db, ServiceCreate(**service))
+
+    return {"message": "Data loaded successfully"}
 
 # -----------------------------
 # Reset (Demo Feature 🔥)

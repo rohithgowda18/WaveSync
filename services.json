@@ -1,0 +1,206 @@
+[
+    {
+        "name": "AuthService",
+        "priority": 1,
+        "dependencies": []
+    },
+    {
+        "name": "UserService",
+        "priority": 1,
+        "dependencies": [
+            "AuthService"
+        ]
+    },
+    {
+        "name": "ProfileService",
+        "priority": 2,
+        "dependencies": [
+            "UserService"
+        ]
+    },
+    {
+        "name": "SessionService",
+        "priority": 1,
+        "dependencies": [
+            "AuthService"
+        ]
+    },
+    {
+        "name": "ProductService",
+        "priority": 1,
+        "dependencies": []
+    },
+    {
+        "name": "InventoryService",
+        "priority": 1,
+        "dependencies": [
+            "ProductService"
+        ]
+    },
+    {
+        "name": "SearchService",
+        "priority": 2,
+        "dependencies": [
+            "ProductService"
+        ]
+    },
+    {
+        "name": "RecommendationService",
+        "priority": 3,
+        "dependencies": [
+            "UserService",
+            "ProductService"
+        ]
+    },
+    {
+        "name": "CartService",
+        "priority": 1,
+        "dependencies": [
+            "UserService"
+        ]
+    },
+    {
+        "name": "OrderService",
+        "priority": 1,
+        "dependencies": [
+            "CartService"
+        ]
+    },
+    {
+        "name": "CheckoutService",
+        "priority": 1,
+        "dependencies": [
+            "OrderService",
+            "PaymentService"
+        ]
+    },
+    {
+        "name": "PaymentService",
+        "priority": 1,
+        "dependencies": [
+            "AuthService"
+        ]
+    },
+    {
+        "name": "BillingService",
+        "priority": 2,
+        "dependencies": [
+            "PaymentService"
+        ]
+    },
+    {
+        "name": "InvoiceService",
+        "priority": 2,
+        "dependencies": [
+            "BillingService"
+        ]
+    },
+    {
+        "name": "NotificationService",
+        "priority": 2,
+        "dependencies": [
+            "UserService"
+        ]
+    },
+    {
+        "name": "EmailService",
+        "priority": 2,
+        "dependencies": [
+            "NotificationService"
+        ]
+    },
+    {
+        "name": "SMSService",
+        "priority": 3,
+        "dependencies": [
+            "NotificationService"
+        ]
+    },
+    {
+        "name": "PushNotificationService",
+        "priority": 2,
+        "dependencies": [
+            "NotificationService"
+        ]
+    },
+    {
+        "name": "ShippingService",
+        "priority": 1,
+        "dependencies": [
+            "OrderService"
+        ]
+    },
+    {
+        "name": "DeliveryService",
+        "priority": 2,
+        "dependencies": [
+            "ShippingService"
+        ]
+    },
+    {
+        "name": "TrackingService",
+        "priority": 2,
+        "dependencies": [
+            "DeliveryService"
+        ]
+    },
+    {
+        "name": "WarehouseService",
+        "priority": 1,
+        "dependencies": [
+            "InventoryService"
+        ]
+    },
+    {
+        "name": "SupplierService",
+        "priority": 2,
+        "dependencies": [
+            "WarehouseService"
+        ]
+    },
+    {
+        "name": "LoggingService",
+        "priority": 1,
+        "dependencies": []
+    },
+    {
+        "name": "MonitoringService",
+        "priority": 1,
+        "dependencies": [
+            "LoggingService"
+        ]
+    },
+    {
+        "name": "AlertService",
+        "priority": 2,
+        "dependencies": [
+            "MonitoringService"
+        ]
+    },
+    {
+        "name": "CacheService",
+        "priority": 1,
+        "dependencies": []
+    },
+    {
+        "name": "CDNService",
+        "priority": 2,
+        "dependencies": [
+            "CacheService"
+        ]
+    },
+    {
+        "name": "MediaService",
+        "priority": 2,
+        "dependencies": [
+            "CDNService"
+        ]
+    },
+    {
+        "name": "UploadService",
+        "priority": 2,
+        "dependencies": [
+            "MediaService"
+        ]
+    }
+]

@@ -11,6 +11,15 @@ networkx>=3.1
 groq>=0.3.0
 python-dotenv>=1.0.0
 
+# AWS Deployment
+boto3>=1.26.0
+
+# Frontend Dashboard
+streamlit>=1.28.0
+streamlit-agraph>=0.0.45
+requests>=2.31.0
+pandas>=2.0.0
+
 # Testing
 pytest>=7.0.0
 httpx>=0.24.0

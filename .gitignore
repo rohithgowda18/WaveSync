@@ -11,6 +11,12 @@ __pycache__/
 # Environment variables
 .env
 
+# Documentation files with examples/credentials
+COMPLETION_SUMMARY.md
+ENV_CONFIG.md
+INTEGRATION_COMPLETE.md
+INTEGRATION_REPORT.md
+
 # Database (Member 1)
 wavesync.db
 
@@ -28,3 +34,7 @@ Thumbs.db
 *.log
 *.tmp
 .pytest_cache/
+
+# Mock Services
+microservices/
+setup_microservices.py

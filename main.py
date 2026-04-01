@@ -1,11 +1,13 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine, Base
-from schemas import ServiceCreate, ServiceResponse
+from schemas import ServiceCreate
 import crud
 from models import Service
 import logging
 import json
+from engine.dependency_discovery import scan_directory
+from ai.dependency_ai import infer_dependencies
 
 # -----------------------------
 # Setup
@@ -14,7 +16,7 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="WaveSync Migration API",
-    version="2.0.0"
+    version="3.0.0"
 )
 
 logging.basicConfig(level=logging.INFO)
@@ -32,12 +34,13 @@ def get_db():
         db.close()
 
 # -----------------------------
-# Helper (IMPORTANT)
+# Helper
 # -----------------------------
 def format_service(service):
     return {
         "id": service.id,
         "name": service.name,
+        "description": service.description,
         "status": service.status,
         "priority": service.priority,
         "dependencies": service.dependencies.split(",") if service.dependencies else [],
@@ -46,32 +49,82 @@ def format_service(service):
     }
 
 # -----------------------------
-# Upload (Optimized)
+# 🔥 ADD SINGLE SERVICE (REAL-TIME AI)
 # -----------------------------
-@app.post("/upload", summary="Upload microservices")
+@app.post("/add-service")
+def add_service(service: ServiceCreate, db: Session = Depends(get_db)):
+
+    existing = db.query(Service).filter(Service.name == service.name).first()
+    if existing:
+        return {"message": "Service already exists"}
+
+    deps = infer_dependencies(service.name, service.description)
+
+    new_service = Service(
+        name=service.name,
+        description=service.description,
+        priority=service.priority,
+        dependencies=",".join(deps),
+        status="Pending"
+    )
+
+    db.add(new_service)
+    db.commit()
+    db.refresh(new_service)
+
+    return {
+        "message": "Service added with AI dependencies",
+        "service": format_service(new_service)
+    }
+
+# -----------------------------
+# 🔥 BULK UPLOAD (AUTO AI)
+# -----------------------------
+@app.post("/upload")
 def upload_services(services: list[ServiceCreate], db: Session = Depends(get_db)):
-    db_services = []
+    count = 0
 
     for s in services:
-        # prevent duplicates
         if db.query(Service).filter(Service.name == s.name).first():
             continue
 
-        db_services.append(
-            Service(
-                name=s.name,
-                priority=s.priority,
-                dependencies=",".join(s.dependencies)
-            )
-        )
+        deps = infer_dependencies(s.name, s.description)
 
-    db.bulk_save_objects(db_services)
+        db.add(Service(
+            name=s.name,
+            description=s.description,
+            priority=s.priority,
+            dependencies=",".join(deps),
+            status="Pending"
+        ))
+
+        count += 1
+
     db.commit()
 
-    return {"message": f"{len(db_services)} services uploaded"}
+    return {"message": f"{count} services uploaded with AI dependencies"}
 
 # -----------------------------
-# Get Services (with filtering)
+# Code-based discovery (optional)
+# -----------------------------
+@app.post("/discover-dependencies")
+def discover_dependencies():
+    return scan_directory("services_code")
+
+@app.post("/auto-discover")
+def auto_discover(db: Session = Depends(get_db)):
+    results = scan_directory("services_code")
+
+    for service_name, deps in results.items():
+        service = db.query(Service).filter(Service.name == service_name).first()
+        if service:
+            service.dependencies = ",".join(deps)
+
+    db.commit()
+    return {"message": "Dependencies updated from code"}
+
+# -----------------------------
+# Get Services
 # -----------------------------
 @app.get("/services")
 def get_services(status: str = None, db: Session = Depends(get_db)):
@@ -80,8 +133,7 @@ def get_services(status: str = None, db: Session = Depends(get_db)):
     if status:
         query = query.filter(Service.status == status)
 
-    services = query.all()
-    return [format_service(s) for s in services]
+    return [format_service(s) for s in query.all()]
 
 # -----------------------------
 # Get Single Service
@@ -96,7 +148,7 @@ def get_status(service_id: int, db: Session = Depends(get_db)):
     return format_service(service)
 
 # -----------------------------
-# Update Status (validated)
+# Update Status
 # -----------------------------
 @app.put("/update/{service_id}")
 def update(service_id: int, status: str, db: Session = Depends(get_db)):
@@ -108,12 +160,10 @@ def update(service_id: int, status: str, db: Session = Depends(get_db)):
     if not service:
         raise HTTPException(status_code=404, detail="Service not found")
 
-    logging.info(f"Service {service_id} updated to {status}")
-
     return {"message": "Updated successfully"}
 
 # -----------------------------
-# Smart NEXT (Dependency-aware 🔥)
+# NEXT (Dependency-aware)
 # -----------------------------
 @app.get("/next")
 def get_next(db: Session = Depends(get_db)):
@@ -122,20 +172,16 @@ def get_next(db: Session = Depends(get_db)):
     for service in services:
         deps = service.dependencies.split(",") if service.dependencies else []
 
-        valid = True
-        for d in deps:
-            dep_service = db.query(Service).filter(Service.name == d).first()
-            if dep_service and dep_service.status != "Success":
-                valid = False
-                break
-
-        if valid:
+        if all(
+            db.query(Service).filter(Service.name == d, Service.status == "Success").first()
+            for d in deps
+        ):
             return format_service(service)
 
     return {"message": "No service ready"}
 
 # -----------------------------
-# Progress (Enhanced)
+# Progress
 # -----------------------------
 @app.get("/progress")
 def progress(db: Session = Depends(get_db)):
@@ -152,24 +198,58 @@ def progress(db: Session = Depends(get_db)):
         "percentage": percentage
     }
 
+# -----------------------------
+# Seed (AI enabled)
+# -----------------------------
 @app.post("/seed")
 def seed_data(db: Session = Depends(get_db)):
     with open("services.json", "r") as f:
         data = json.load(f)
 
-    for service in data:
-        crud.create_service(db, ServiceCreate(**service))
+    count = 0
+    skipped = 0
 
-    return {"message": "Data loaded successfully"}
+    for service in data:
+        if db.query(Service).filter(Service.name == service["name"]).first():
+            skipped += 1
+            continue
+
+        deps = infer_dependencies(service["name"], service["description"])
+
+        db.add(Service(
+            name=service["name"],
+            description=service["description"],
+            priority=service["priority"],
+            dependencies=",".join(deps),
+            status="Pending"
+        ))
+
+        count += 1
+
+    db.commit()
+
+    return {"added": count, "skipped": skipped}
 
 # -----------------------------
-# Reset (Demo Feature 🔥)
+# Reset
 # -----------------------------
 @app.post("/reset")
 def reset(db: Session = Depends(get_db)):
-    db.query(Service).update({Service.status: "Pending"})
+    db.query(Service).delete()
     db.commit()
-    return {"message": "Reset complete"}
+    return {"message": "Database cleared"}
+
+@app.post("/refresh-ai")
+def refresh_ai(db: Session = Depends(get_db)):
+    services = db.query(Service).all()
+
+    for service in services:
+        deps = infer_dependencies(service.name, service.description)
+        service.dependencies = ",".join(deps)
+
+    db.commit()
+
+    return {"message": "Dependencies refreshed successfully"}
 
 # -----------------------------
 # Health Check

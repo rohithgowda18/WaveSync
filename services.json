@@ -1,206 +1,182 @@
 [
     {
         "name": "AuthService",
+        "description": "Handles authentication, login, and token validation",
         "priority": 1,
         "dependencies": []
     },
     {
         "name": "UserService",
+        "description": "Manages user profiles, registration, and account data",
         "priority": 1,
-        "dependencies": [
-            "AuthService"
-        ]
+        "dependencies": []
     },
     {
         "name": "ProfileService",
+        "description": "Handles user profile details and personalization",
         "priority": 2,
-        "dependencies": [
-            "UserService"
-        ]
+        "dependencies": []
     },
     {
         "name": "SessionService",
+        "description": "Manages user sessions and active login states",
         "priority": 1,
-        "dependencies": [
-            "AuthService"
-        ]
+        "dependencies": []
     },
     {
         "name": "ProductService",
+        "description": "Manages product catalog, details, and listings",
         "priority": 1,
         "dependencies": []
     },
     {
         "name": "InventoryService",
+        "description": "Tracks product stock levels and availability",
         "priority": 1,
-        "dependencies": [
-            "ProductService"
-        ]
+        "dependencies": []
     },
     {
         "name": "SearchService",
+        "description": "Provides search functionality across products",
         "priority": 2,
-        "dependencies": [
-            "ProductService"
-        ]
+        "dependencies": []
     },
     {
         "name": "RecommendationService",
+        "description": "Generates product recommendations based on user behavior",
         "priority": 3,
-        "dependencies": [
-            "UserService",
-            "ProductService"
-        ]
+        "dependencies": []
     },
     {
         "name": "CartService",
+        "description": "Handles shopping cart operations and item management",
         "priority": 1,
-        "dependencies": [
-            "UserService"
-        ]
+        "dependencies": []
     },
     {
         "name": "OrderService",
+        "description": "Handles order placement and checkout process",
         "priority": 1,
-        "dependencies": [
-            "CartService"
-        ]
+        "dependencies": []
     },
     {
         "name": "CheckoutService",
+        "description": "Processes checkout including validation and payment initiation",
         "priority": 1,
-        "dependencies": [
-            "OrderService",
-            "PaymentService"
-        ]
+        "dependencies": []
     },
     {
         "name": "PaymentService",
+        "description": "Handles payment processing and transactions",
         "priority": 1,
-        "dependencies": [
-            "AuthService"
-        ]
+        "dependencies": []
     },
     {
         "name": "BillingService",
+        "description": "Manages billing records and payment history",
         "priority": 2,
-        "dependencies": [
-            "PaymentService"
-        ]
+        "dependencies": []
     },
     {
         "name": "InvoiceService",
+        "description": "Generates invoices for completed transactions",
         "priority": 2,
-        "dependencies": [
-            "BillingService"
-        ]
+        "dependencies": []
     },
     {
         "name": "NotificationService",
+        "description": "Sends notifications to users about system events",
         "priority": 2,
-        "dependencies": [
-            "UserService"
-        ]
+        "dependencies": []
     },
     {
         "name": "EmailService",
+        "description": "Handles sending emails to users",
         "priority": 2,
-        "dependencies": [
-            "NotificationService"
-        ]
+        "dependencies": []
     },
     {
         "name": "SMSService",
+        "description": "Handles sending SMS messages to users",
         "priority": 3,
-        "dependencies": [
-            "NotificationService"
-        ]
+        "dependencies": []
     },
     {
         "name": "PushNotificationService",
+        "description": "Sends push notifications to mobile devices",
         "priority": 2,
-        "dependencies": [
-            "NotificationService"
-        ]
+        "dependencies": []
     },
     {
         "name": "ShippingService",
+        "description": "Manages shipping and logistics for orders",
         "priority": 1,
-        "dependencies": [
-            "OrderService"
-        ]
+        "dependencies": []
     },
     {
         "name": "DeliveryService",
+        "description": "Handles delivery of orders to customers",
         "priority": 2,
-        "dependencies": [
-            "ShippingService"
-        ]
+        "dependencies": []
     },
     {
         "name": "TrackingService",
+        "description": "Tracks shipment status and delivery progress",
         "priority": 2,
-        "dependencies": [
-            "DeliveryService"
-        ]
+        "dependencies": []
     },
     {
         "name": "WarehouseService",
+        "description": "Manages warehouse storage and operations",
         "priority": 1,
-        "dependencies": [
-            "InventoryService"
-        ]
+        "dependencies": []
     },
     {
         "name": "SupplierService",
+        "description": "Manages supplier information and procurement",
         "priority": 2,
-        "dependencies": [
-            "WarehouseService"
-        ]
+        "dependencies": []
     },
     {
         "name": "LoggingService",
+        "description": "Collects and stores logs from all services",
         "priority": 1,
         "dependencies": []
     },
     {
         "name": "MonitoringService",
+        "description": "Monitors system health and performance metrics",
         "priority": 1,
-        "dependencies": [
-            "LoggingService"
-        ]
+        "dependencies": []
     },
     {
         "name": "AlertService",
+        "description": "Sends alerts based on monitoring and system events",
         "priority": 2,
-        "dependencies": [
-            "MonitoringService"
-        ]
+        "dependencies": []
     },
     {
         "name": "CacheService",
+        "description": "Handles caching for faster data retrieval",
         "priority": 1,
         "dependencies": []
     },
     {
         "name": "CDNService",
+        "description": "Delivers static content efficiently via content delivery network",
         "priority": 2,
-        "dependencies": [
-            "CacheService"
-        ]
+        "dependencies": []
     },
     {
         "name": "MediaService",
+        "description": "Manages media files like images and videos",
         "priority": 2,
-        "dependencies": [
-            "CDNService"
-        ]
+        "dependencies": []
     },
     {
         "name": "UploadService",
+        "description": "Handles file uploads and storage operations",
         "priority": 2,
-        "dependencies": [
-            "MediaService"
-        ]
+        "dependencies": []
     }
 ]

@@ -8,6 +8,7 @@ class Service(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), unique=True)
     status = Column(String(50), default="Pending")
+    description = Column(String(500))
     priority = Column(Integer)
     dependencies = Column(String(255))
 

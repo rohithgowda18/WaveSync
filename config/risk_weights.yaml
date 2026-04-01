@@ -1,0 +1,8 @@
+weights:
+  dependencies: 2
+  database: 3
+  priority: 1
+
+thresholds:
+  high: 7
+  medium: 4

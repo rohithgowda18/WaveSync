@@ -1,0 +1,34 @@
+database_keywords:
+  - mysql
+  - postgres
+  - postgresql
+  - sqlite
+  - mongodb
+  - dynamodb
+  - mariadb
+  - oracle
+  - sql server
+  - rds
+
+cache_keywords:
+  - redis
+  - memcached
+  - elasticache
+  - cache
+
+queue_keywords:
+  - rabbitmq
+  - sqs
+  - kafka
+  - celery
+  - queue
+  - activemq
+
+data_keywords:
+  - etl
+  - spark
+  - airflow
+  - glue
+  - data pipeline
+  - batch processing
+  - hadoop

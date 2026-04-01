@@ -1,0 +1,34 @@
+database:
+  mysql: AWS RDS
+  postgres: AWS RDS
+  mariadb: AWS RDS
+  sqlite: AWS RDS
+  mongodb: AWS DocumentDB
+
+compute:
+  python: AWS ECS
+  flask: AWS ECS
+  django: AWS ECS
+  fastapi: AWS ECS
+  node: AWS ECS
+  express: AWS ECS
+  next: AWS ECS
+  go: AWS ECS
+  rust: AWS ECS
+  java: AWS ECS
+  spring: AWS ECS
+  lambda: AWS Lambda
+  stateless: AWS Lambda
+
+storage:
+  local: AWS S3
+
+cache:
+  redis: AWS ElastiCache
+  memcached: AWS ElastiCache
+
+queue:
+  rabbitmq: AWS SQS
+  kafka: AWS MSK
+  sqs: AWS SQS
+  celery: AWS SQS

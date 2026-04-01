@@ -1,109 +1,110 @@
-# 🌊 WaveSync AI — Automated Cloud Migration Intelligence
+# 🌊 WaveSync AI — Project Technical Architecture
 
-WaveSync AI is a high-performance orchestration and intelligence platform designed to automate the migration of complex microservice ecosystems to AWS. It combines Graph Theory (DAGs) with LLM-powered "Rectification Agents" to determine the perfect migration sequence and automatically update service configurations for cloud readiness.
-
----
-
-## 🧠 The "Member" Architecture
-
-WaveSync is built by a unified team of AI-coordinated agents, each focusing on a critical layer of the migration pipeline:
-
-### 🏗️ Member 1: Core Systems Engineer (The Skeleton & Memory)
-*   **Role:** Manages the system's state and data persistence.
-*   **Implementation:** 
-    *   **Backend:** FastAPI-based REST API for service ingestion and progress monitoring.
-    *   **Database:** SQLite (`wavesync.db`) tracking the state of all 50+ services.
-    *   **Statuses:** `Pending` → `Rectifying` → `Deploying` → `Success` | `Failed`.
-    *   **Endpoints:** `/upload` (manifest ingestion), `/status` (real-time tracking), `/next` (dependency-aware scheduling).
-
-### 📐 Member 2: Graph & Logic Specialist (The Brain & Sequence)
-*   **Role:** Resolves complex dependency chains and determines the optimal execution order.
-*   **Implementation:**
-    *   **Engine:** Directed Acyclic Graph (DAG) construction using **NetworkX**.
-    *   **Heuristic:** **Priority-Weighted DAG** scoring.
-    *   **Formula:** $S = (BusinessPriority \times 0.7) + (OutDegree \times 0.3)$.
-    *   **Validation:** Built-in "Cycle Detector" to prevent circular dependency deadlocks.
-    *   **Output:** A deterministic, prioritized serial execution sequence.
-
-### 🤖 Member 3: AI Agent Engineer (The Intelligence & Rectifier)
-*   **Role:** Analyzes legacy microservice configurations and "rectifies" them for AWS.
-*   **Implementation:**
-    *   **LLM Integration:** **Groq** (`llama-3.3-70b-versatile`) for ultra-low latency inference.
-    *   **Prompt Engineering:** Strict JSON-only schema mapping local components (MySQL, Local Storage) to AWS equivalents (RDS, S3, ECS).
-    *   **Defensive Parsing:** Robust extraction logic to handle LLM noise and ensure the pipeline never crashes.
-    *   **Batching:** Sequential processing with rate-limiting protection.
+WaveSync AI is a production-grade orchestration and intelligence platform designed to automate the migration of complex microservice ecosystems to AWS. It leverages Directed Acyclic Graphs (DAGs) for deterministic sequencing and LLM agents for automated infrastructure rectification.
 
 ---
 
-## 🛠️ Technical Stack
+## 🏛️ System Architecture (`src/` layout)
 
-| Category | Technology |
-| :--- | :--- |
-| **Language** | Python 3.10+ |
-| **API Framework** | FastAPI + Uvicorn |
-| **Database** | SQLAlchemy + SQLite |
-| **Graph Theory** | NetworkX |
-| **AI / LLM** | Groq API (Llama 3.3) |
-| **Data Validation** | Pydantic 2.0 |
-| **Environment** | `python-dotenv` |
-
----
-
-## 📂 Project Structure (Senior Engineer Layout)
+The project follows a modular, package-based architecture that separates concerns into a clean, scalable hierarchy.
 
 ```text
 WaveSync/
 ├── src/                        # Source Code
 │   └── wavesync/               # Main Package
-│       ├── api/                # Member 1: API & Persistence
-│       ├── engine/             # Member 2: Graph & DAG Logic
-│       ├── agents/             # Member 3: LLM Intelligence
+│       ├── api/                # Member 1: Persistence & API Layer
+│       ├── engine/             # Member 2: Graph & Orchestration Layer
+│       ├── agents/             # Member 3: AI Intelligence Layer
 │       └── main.py             # Application Entry Point
-├── docs/                       # Technical Documentation & Summaries
-├── scripts/                    # Development & Utility Scripts
+├── docs/                       # Technical Documentation
 ├── tests/                      # Unit & Integration Tests
-├── .env                        # Private Configurations (API Keys)
-└── requirements.txt            # Unified Dependencies
+└── .env                        # Configuration / Secrets
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🏗️ Member 1: Core Systems Engineer (Data & Memory)
 
-### 1. Environment Setup
-```bash
-# Create and activate virtual environment
+Responsible for the platform's "Skeleton" and state persistence using a lightweight, high-performance SQLite engine.
+
+### 💾 Database Schema (`wavesync.db`)
+| Column | Type | Description |
+| :--- | :--- | :--- |
+| `id` | Integer | Primary Key (Auto-increment) |
+| `name` | String(255) | Unique service identifier |
+| `status` | String(50) | State (Pending, Rectifying, Success, Failed) |
+| `priority` | Integer | Business urgency (1-10) |
+| `dependencies` | String(255) | Comma-separated list of dependent service names |
+| `tech_stack` | String(255) | Service technology (e.g., Python Flask, Go) |
+| `database_type`| String(255) | Local database type (e.g., Local MySQL) |
+
+### 🌐 FastAPI Implementation
+*   **Ingestion:** `@app.post("/upload")` handles bulk manifest uploads of 50+ services.
+*   **Orchestration:** `@app.get("/next")` provides the next available service based on dependency satisfaction.
+*   **Monitoring:** `@app.get("/progress")` provides real-time migration metrics (percentage complete).
+
+---
+
+## 📐 Member 2: Graph & Logic Specialist (The Brain)
+
+Ensures deterministic execution and constraint satisfaction using advanced Graph Theory.
+
+### 🧮 Priority-Weighted DAG Heuristic
+To determine the perfect migration order, the engine calculates a **Migration Score (S)** for each service:
+
+$$S = (BusinessPriority \times 0.7) + (OutDegree \times 0.3)$$
+
+- **Business Priority (0.7):** Directs focus to mission-critical services.
+- **Out-Degree (0.3):** Prioritizes foundational services that many others depend on (bottleneck resolution).
+
+### 🔄 Cycle Detection & Topological Sort
+*   **Validation:** Uses `networkx.is_directed_acyclic_graph` to detect circular dependencies before execution.
+*   **Sequence:** Implements **Modified Kahn’s Algorithm** with a priority-weighted max-heap to generate a deterministic "Serial Push List."
+
+---
+
+## 🤖 Member 3: AI Agent Engineer (The Intelligence)
+
+Acts as the "Solution Architect" to rectify legacy configurations into cloud-ready AWS plans.
+
+### 🧠 Solution Architect Role
+The agent is prompted as a **Senior Cloud Migration Architect** with strict decision-mapping rules:
+
+> [!IMPORTANT]
+> **AI Mapping Rules:**
+> - Local MySQL / PostgreSQL → **AWS RDS**
+> - Local Files → **AWS S3**
+> - Cron Jobs → **AWS EventBridge**
+> - Queue → **AWS SQS**
+> - Cache → **AWS ElastiCache**
+> - Docker → **AWS ECS / EKS**
+
+### 🛡️ Defensive Parsing & Token Management
+*   **Balanced Brace Extraction:** A robust JSON parser ensures that even if the LLM includes markdown or conversational noise, the final architecture plan is correctly extracted.
+*   **Zero-Rupee Optimization:** Implements global rate-limiting (`GLOBAL_RATE_LIMIT_DELAY`) to process 50+ consecutive services without triggering API throttling or exceeding quota limits on the **Groq (Llama 3.3)** platform.
+
+---
+
+## 🚀 Execution Guide
+
+### 🔧 Setup
+```powershell
+# 1. Environment
 python -m venv venv
 .\venv\Scripts\activate
 
-# Install dependencies
+# 2. Dependencies
 pip install -r requirements.txt
 ```
 
-### 2. Configuration
-Create a `.env` file in the root directory:
-```text
-GROQ_API_KEY=your_api_key_here
-```
-
-### 3. Running the Platform
-```bash
-# Set PYTHONPATH and start the FastAPI server
+### 🏃 Start Service
+```powershell
 $env:PYTHONPATH = "src"
 python src/wavesync/main.py
 ```
 
 ---
 
-## 📈 Success Criteria
-- [x] Ingests and persists 50+ service manifests dynamically.
-- [x] Correctly identifies and blocks circular dependencies.
-- [x] Generates deterministic, priority-weighted migration sequences.
-- [x] Transforms legacy configs into AWS-ready JSON plans via AI.
-- [x] Maintains high observability with detailed per-service logging.
-
----
-
-**Status:** ✅ **Production Ready / Hackathon Ready**
-**Branch:** `feature/ai-rectification-agent`
-**Version:** 2.1.0
+**Status:** ✅ **Production Ready**
+**Author:** Senior AI Agent Team
+**Target:** Hackathon - Cloud Migration Track

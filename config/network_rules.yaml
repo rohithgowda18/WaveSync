@@ -1,0 +1,23 @@
+stateful:
+  private_subnet: true
+  load_balancer: ALB
+  api_gateway: false
+  public_subnet: true
+
+stateless:
+  private_subnet: false
+  load_balancer: ALB
+  api_gateway: false
+  public_subnet: true
+
+infrastructure:
+  private_subnet: true
+  load_balancer: None
+  api_gateway: false
+  public_subnet: false
+
+data-service:
+  private_subnet: true
+  load_balancer: None
+  api_gateway: false
+  public_subnet: false

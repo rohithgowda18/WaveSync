@@ -1,0 +1,8 @@
+"""
+Requirements for the WaveSync Graph & Logic Engine
+"""
+
+networkx>=3.0
+pydantic>=2.0
+pytest>=7.0
+pytest-cov>=4.0

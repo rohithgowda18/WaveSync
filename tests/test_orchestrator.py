@@ -6,7 +6,9 @@ Validates all core functionality: DAG validation, cycle detection, and serial se
 import pytest
 from typing import List
 
-from graph_engine import ServiceNode, WaveSyncOrchestrator, MigrationCycleError, InvalidServiceError
+from wavesync.engine.models import ServiceNode
+from wavesync.engine.orchestrator import WaveSyncOrchestrator
+from wavesync.engine.exceptions import MigrationCycleError, InvalidServiceError
 
 
 class TestServiceNodeValidation:

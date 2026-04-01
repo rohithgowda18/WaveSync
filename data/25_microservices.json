@@ -17,33 +17,45 @@
         "name": "auth-service",
         "tech_stack": "Node.js, Express",
         "database": "None",
-        "dependencies": ["postgresql-main", "redis-cache"],
+        "dependencies": [
+            "postgresql-main",
+            "redis-cache"
+        ],
         "priority": 3
     },
     {
         "name": "user-service",
         "tech_stack": "Java Spring Boot",
         "database": "None",
-        "dependencies": ["postgresql-main", "auth-service"],
+        "dependencies": [
+            "postgresql-main",
+            "auth-service"
+        ],
         "priority": 4
     },
     {
         "name": "payment-gateway",
         "tech_stack": "Python FastAPI",
         "database": "None",
-        "dependencies": ["auth-service"],
+        "dependencies": [
+            "auth-service"
+        ],
         "priority": 5
     },
     {
         "name": "order-service",
         "tech_stack": "Java Spring Boot",
         "database": "None",
-        "dependencies": ["postgresql-main", "user-service", "payment-gateway"],
+        "dependencies": [
+            "postgresql-main",
+            "user-service",
+            "payment-gateway"
+        ],
         "priority": 6
     },
     {
         "name": "inventory-db",
-        "tech_stack": "MySQL 8.0",
+        "tech_stack": "MySQL",
         "database": "mysql",
         "dependencies": [],
         "priority": 1
@@ -52,14 +64,20 @@
         "name": "inventory-service",
         "tech_stack": "Go",
         "database": "None",
-        "dependencies": ["inventory-db", "auth-service"],
+        "dependencies": [
+            "inventory-db",
+            "auth-service"
+        ],
         "priority": 7
     },
     {
         "name": "shipping-service",
         "tech_stack": "Node.js",
         "database": "None",
-        "dependencies": ["order-service", "inventory-service"],
+        "dependencies": [
+            "order-service",
+            "inventory-service"
+        ],
         "priority": 8
     },
     {
@@ -73,7 +91,10 @@
         "name": "notification-service",
         "tech_stack": "Python Celery",
         "database": "None",
-        "dependencies": ["email-notification-queue", "user-service"],
+        "dependencies": [
+            "email-notification-queue",
+            "user-service"
+        ],
         "priority": 9
     },
     {
@@ -87,14 +108,19 @@
         "name": "catalog-indexer",
         "tech_stack": "Python worker",
         "database": "None",
-        "dependencies": ["inventory-service", "search-db"],
+        "dependencies": [
+            "inventory-service",
+            "search-db"
+        ],
         "priority": 8
     },
     {
         "name": "search-api",
         "tech_stack": "Go",
         "database": "None",
-        "dependencies": ["search-db"],
+        "dependencies": [
+            "search-db"
+        ],
         "priority": 7
     },
     {
@@ -108,7 +134,10 @@
         "name": "recommendation-ml-engine",
         "tech_stack": "Python TensorFlow",
         "database": "None",
-        "dependencies": ["user-service", "order-service"],
+        "dependencies": [
+            "user-service",
+            "order-service"
+        ],
         "priority": 10
     },
     {
@@ -122,14 +151,20 @@
         "name": "analytics-consumer",
         "tech_stack": "Kafka Consumer, Java",
         "database": "None",
-        "dependencies": ["analytics-db", "order-service"],
+        "dependencies": [
+            "analytics-db",
+            "order-service"
+        ],
         "priority": 10
     },
     {
         "name": "admin-dashboard",
         "tech_stack": "React SPA",
         "database": "None",
-        "dependencies": ["auth-service", "analytics-db"],
+        "dependencies": [
+            "auth-service",
+            "analytics-db"
+        ],
         "priority": 8
     },
     {
@@ -143,35 +178,51 @@
         "name": "ticket-service",
         "tech_stack": "Node.js",
         "database": "None",
-        "dependencies": ["customer-support-db", "auth-service"],
+        "dependencies": [
+            "customer-support-db",
+            "auth-service"
+        ],
         "priority": 5
     },
     {
         "name": "chatbot-backend",
         "tech_stack": "Python LLM",
         "database": "None",
-        "dependencies": ["ticket-service", "redis-cache"],
+        "dependencies": [
+            "ticket-service",
+            "redis-cache"
+        ],
         "priority": 6
     },
     {
         "name": "billing-cron-job",
         "tech_stack": "Linux crontab bash scripts",
         "database": "None",
-        "dependencies": ["payment-gateway"],
+        "dependencies": [
+            "payment-gateway"
+        ],
         "priority": 4
     },
     {
         "name": "fraud-detection-engine",
         "tech_stack": "Go",
         "database": "None",
-        "dependencies": ["payment-gateway", "user-service"],
+        "dependencies": [
+            "payment-gateway",
+            "user-service"
+        ],
         "priority": 3
     },
     {
         "name": "api-gateway",
         "tech_stack": "Kong",
         "database": "None",
-        "dependencies": ["auth-service", "user-service", "order-service", "search-api"],
+        "dependencies": [
+            "auth-service",
+            "user-service",
+            "order-service",
+            "search-api"
+        ],
         "priority": 2
     }
 ]

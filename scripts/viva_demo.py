@@ -4,7 +4,7 @@ import time
 
 from wavesync.engine.models import ServiceNode
 from wavesync.engine.orchestrator import WaveSyncOrchestrator
-from wavesync.agents.rectify import rectify
+from wavesync.agents.member3_pipeline import generate_cloud_plan
 
 # Self-contained set of 25 enterprise-grade, realistic inter-dependent microservices
 services_data = [
@@ -54,7 +54,7 @@ def run_viva_simulation():
             id=s["name"],
             priority=s["priority"],
             depends_on=s["dependencies"],
-            metadata={"tech_stack": s["tech_stack"], "database": s["database"]}
+            metadata={"tech_stack": s["tech_stack"], "database_type": s["database"]}
         ))
 
     print("✅ Directed Acyclic Graph Topology mapped safely into memory.\n")
@@ -86,16 +86,20 @@ def run_viva_simulation():
     print(f"Simulation Limits: Processing Top 3 Core Architectures directly to Groq Cloud...")
     
     for i, payload in enumerate(ordered_payloads[:3]):
-        print(f"\n[{i+1}/3] 🧠 Submitting `{payload['name']}` ({payload['tech_stack']}) to AI Rectifier...")
+        # Ensure payload has the correct keys for the pipeline
+        payload["database_type"] = payload.get("database", "None")
+        
+        print(f"\n[{i+1}/3] 🧠 Generating Cloud Plan for `{payload['name']}` ({payload['tech_stack']})...")
         try:
-            rectified_aws_plan = rectify(payload)
-            print(f"  ↳ STATUS:     {rectified_aws_plan['status'].upper()}")
-            print(f"  ↳ AWS STACK:  {', '.join(rectified_aws_plan.get('aws_services', []))}")
-            print(f"  ↳ REASONING:  {rectified_aws_plan.get('reasoning', '')}")
-            print(f"  ↳ CLOUD PLAN: {rectified_aws_plan.get('deployment_strategy', '')}")
+            plan = generate_cloud_plan(payload)
+            print(f"  ↳ TYPE:       {plan['type'].upper()} ({plan['classification_reason']})")
+            print(f"  ↳ COMPUTE:    {plan['compute']} in {plan['region']}")
+            print(f"  ↳ STACK:      {plan['database']}, {plan['storage']}, {plan['cache']}, {plan['queue']}")
+            print(f"  ↳ NETWORK:    VPC={plan['network']['vpc']}, Public={plan['network']['public_subnet']}, Private={plan['network']['private_subnet']}")
+            print(f"  ↳ RISK:       {plan['risk'].upper()} (Score: {plan['risk_score']})")
             successes += 1
         except Exception as e:
-            print(f"  ↳ ❌ AI ERROR: {str(e)}")
+            print(f"  ↳ ❌ PIPELINE ERROR: {str(e)}")
             break
             
     # 4. GENERATE FINAL REPORT
